@@ -36,8 +36,6 @@ Copy
    cd bidder.submission.code
 Install the required dependencies:
 
-bash
-Copy
 pip install -r requirements.txt
 3. Running the Code
 Place your dataset files in the appropriate directory (e.g., /content/drive/MyDrive).
@@ -53,16 +51,13 @@ Click files: clk.06.txt, clk.07.txt, etc.
 Conversion files: conv.06.txt, conv.07.txt, etc.
 
 Run the bidding simulation:
-
-bash
-Copy
 python python/main.py
 4. Expected Output
 The program will simulate the bidding process and output the results in the console. For example:
-
-Copy
 Bid placed: 10.0 for Advertiser 1458
 Bid placed: 10.02 for Advertiser 3358
+
+
 5. Viewing Documentation
 EDA: Open the documentation/EDA.ipynb file in Jupyter Notebook to view the exploratory data analysis.
 
