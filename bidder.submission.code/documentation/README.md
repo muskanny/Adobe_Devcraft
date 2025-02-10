@@ -15,8 +15,7 @@ bidder.submission.code/
 ├── README.md
 └── requirements.txt
 
-markdown
-Copy
+
 # DSP Bidding Optimization
 
 
