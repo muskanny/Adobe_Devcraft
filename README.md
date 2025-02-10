@@ -2,76 +2,123 @@
 ## Team Members: Muskan Singh, Srishti Chugh, Nishtha Gupta, Shreeya Aggarwal
 
 
-bidder.submission.code/
-├── python/
-│   ├── BidRequest.py
-│   ├── Bidder.py
-│   ├── Bid.py
-│   └── main.py
-├── documentation/
-│   ├── EDA.ipynb
-│   ├── Approach.md
-│   └── Validation_Results.md
-├── README.md
-└── requirements.txt
+# Approach
 
-markdown
-Copy
-# DSP Bidding Optimization
-
-
+This document describes the approach used in our DSP (Demand-Side Platform) bidding algorithm to optimize the number of clicks and conversions while staying within a fixed budget.
 
 ---
 
-## **Instructions to Run the Code**
+## **1. Problem Statement**
+The goal of the advertising campaign is to maximize the score, defined as:
+Score = Total Clicks + N * Total Conversions
 
-### **1. Prerequisites**
-- **Python Version**: Ensure you have Python 3.9 installed.
-- **Dependencies**: Install the required Python libraries listed in `requirements.txt`.
+Copy
+where:
+- `N` is a weight that reflects the relative importance of conversions vs. clicks for each advertiser.
+- The bidding process is subject to a fixed budget constraint.
 
-### **2. Installation**
-1. Clone or download the project repository.
-2. Navigate to the project directory:
-   ```bash
-   cd bidder.submission.code
-Install the required dependencies:
+The task is to design a bidding strategy that:
+- Decides whether to bid on a given impression.
+- Determines the optimal bid price for each impression.
 
-pip install -r requirements.txt
-3. Running the Code
-Place your dataset files in the appropriate directory (e.g., /content/drive/MyDrive).
+---
 
-Ensure the dataset files are named correctly:
+## **2. Key Challenges**
+- **Real-Time Decision Making**: Bidding decisions must be made in real-time without knowledge of future impressions.
+- **Budget Constraints**: The total spending must not exceed the fixed budget.
+- **Second-Price Auction**: The winning bidder pays the second-highest bid price, so overbidding is not optimal.
 
-Bid files: bid.06.txt, bid.07.txt, etc.
+---
 
-Impression files: imp.06.txt, imp.07.txt, etc.
+## **3. Our Approach**
 
-Click files: clk.06.txt, clk.07.txt, etc.
+### **3.1. Data Preprocessing**
+- **Data Loading**: We load the bid, impression, click, and conversion logs from the provided dataset.
+- **Feature Engineering**:
+  - Calculate **Click-Through Rate (CTR)** and **Conversion Rate (CVR)** for each combination of `AdvertiserID`, `AdslotID`, and `Region`.
+  - Handle missing values by using default values for `CTR` (0.01) and `CVR` (0.001).
+- **Historical Data**: We preprocess the historical data to estimate `CTR` and `CVR` for incoming bid requests.
 
-Conversion files: conv.06.txt, conv.07.txt, etc.
+### **3.2. Bidding Strategy**
+Our bidding strategy is based on the following steps:
 
-Run the bidding simulation:
-python python/main.py
-4. Expected Output
-The program will simulate the bidding process and output the results in the console. For example:
-Bid placed: 10.0 for Advertiser 1458
-Bid placed: 10.02 for Advertiser 3358
+1. **Estimate Expected Value**:
+   - For each bid request, we estimate the expected value of the impression using:
+     ```
+     Expected Value = CTR * (1 + N * CVR)
+     ```
+     where:
+     - `CTR` is the Click-Through Rate.
+     - `CVR` is the Conversion Rate.
+     - `N` is the advertiser-specific weight for conversions.
 
+2. **Dynamic Budget Allocation**:
+   - We allocate the budget dynamically across advertisers based on their expected value.
+   - Advertisers with higher expected values receive a larger share of the budget.
 
-5. Viewing Documentation
-EDA: Open the documentation/EDA.ipynb file in Jupyter Notebook to view the exploratory data analysis.
+3. **Bid Price Calculation**:
+   - The bid price is calculated as:
+     ```
+     Bid Price = Expected Value * Scaling Factor
+     ```
+     where the scaling factor ensures the bid price is reasonable and within the remaining budget.
+   - We ensure the bid price is at least equal to the floor price of the ad slot.
 
-Approach: Open the documentation/Approach.md file to read about the bidding strategy and approach.
+4. **Second-Price Auction Logic**:
+   - Since the auction is a second-price auction, we bid slightly above the floor price to minimize costs while still winning the auction.
 
-Validation Results: Open the documentation/Validation_Results.md file to view the validation results and insights.
+5. **Edge Cases**:
+   - If no historical data is available for a specific combination of features, we use default values for `CTR` and `CVR`.
+   - If the remaining budget is insufficient, we do not place a bid.
 
-Dependencies
-Python 3.9
+### **3.3. Performance Metrics**
+We evaluate the performance of our bidding strategy using the following metrics:
+- **Total Clicks**: The total number of clicks generated.
+- **Total Conversions**: The total number of conversions generated.
+- **Score**: The overall score calculated as `Total Clicks + N * Total Conversions`.
+- **Budget Utilization**: The percentage of the budget spent.
 
-pandas
+---
 
-numpy
+## **4. Implementation Details**
 
-matplotlib
+### **4.1. Code Structure**
+- **`BidRequest.py`**: Defines the `BidRequest` class, which represents a bidding request.
+- **`Bidder.py`**: Defines the `Bidder` interface, which the `Bid` class implements.
+- **`Bid.py`**: Implements the `Bid` class, which contains the core bidding logic.
+- **`main.py`**: The entry point for the application. It loads the data, initializes the `Bid` class, and simulates the bidding process.
 
-seaborn
+### **4.2. Key Methods**
+- **`getHistoricalCTR`**: Estimates the CTR for a given bid request based on historical data.
+- **`getHistoricalCVR`**: Estimates the CVR for a given bid request based on historical data.
+- **`getBidPrice`**: Determines the bid price for a given bid request or returns `-1` if no bid is placed.
+
+---
+
+## **5. Validation and Results**
+We validated our bidding strategy using the provided dataset. The results are as follows:
+
+| Advertiser ID | Score  | Budget Spent |
+|---------------|--------|--------------|
+| 1458          | 2451.0 | 4,410,448,896 |
+| 3358          | 1744.0 | 876,840,448  |
+| 3386          | 2079.0 | 4,227,579,392 |
+| 3427          | 1917.0 | 3,344,589,056 |
+| 3476          | 1051.0 | 1,684,169,216 |
+
+### **Key Insights**:
+- **Advertiser 1458** has the highest score but also the highest budget spent, indicating inefficiency.
+- **Advertiser 3358** has a moderate score with relatively low budget spent, indicating efficient budget utilization.
+- **Advertiser 3476** has the lowest score, suggesting that the campaign needs optimization to improve conversions.
+
+---
+
+## **6. Future Improvements**
+- **Machine Learning Models**: Use machine learning models to predict `CTR` and `CVR` more accurately.
+- **Dynamic Scaling**: Adjust the scaling factor dynamically based on the remaining budget and expected value.
+- **Advertiser-Specific Strategies**: Tailor the bidding strategy for each advertiser based on their goals (e.g., clicks vs. conversions).
+
+---
+
+## **7. Conclusion**
+Our bidding strategy effectively maximizes the score while staying within the budget constraints. By dynamically allocating the budget and using historical data to estimate the expected value of impressions, we achieve a balance between clicks and conversions. Further improvements can be made by incorporating machine learning models and advertiser-specific strategies.
