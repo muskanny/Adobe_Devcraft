@@ -3,7 +3,9 @@
 This document summarizes the results of validating our DSP bidding algorithm on the provided dataset. The goal was to maximize the score (`Total Clicks + N * Total Conversions`) while staying within the fixed budget.
 
 ---
-
+![alt text](image.png)
+![alt text](image-1.png)
+![alt text](image-2.png)
 ## **1. Performance Metrics**
 We evaluated the performance of our bidding strategy using the following metrics:
 - **Total Clicks**: The total number of clicks generated.
