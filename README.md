@@ -1,10 +1,10 @@
 ## Team Name: ctrl+r
 ## Team Members: Muskan Singh, Srishti Chugh, Nishtha Gupta, Shreeya Aggarwal
-
+### LINK TO GITHUB REPO: https://github.com/muskanny/Adobe_Devcraft
+## kindly visit the github repo for video presentation of our project
 
 # Approach
-
-This document describes the approach used in our DSP (Demand-Side Platform) bidding algorithm to optimize the number of clicks and conversions while staying within a fixed budget.
+Describing the approach used in our DSP (Demand-Side Platform) bidding algorithm to optimize the number of clicks and conversions while staying within a fixed budget.
 
 ---
 
