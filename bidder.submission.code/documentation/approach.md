@@ -85,46 +85,78 @@ This metric ensures the models produce well-calibrated probability scores, essen
 
 ---
 
-## 4. How to Run the Project
+# Ad Prediction App
 
-### 4.1. Prerequisites
+## Overview
+This Streamlit application predicts the number of impressions, clicks, conversions, and bidding prices for online advertising campaigns using pre-trained machine learning models.
 
-Ensure you have the following installed:
-- Python 3.x
-- Pandas
-- NumPy
-- XGBoost
-- Scikit-learn
-
-Install dependencies using:
-```bash
-pip install pandas numpy xgboost scikit-learn
+## Directory Structure
+```
+project_directory/
+│-- python/
+│   │-- app.py  # Main Streamlit app
+│-- models/
+│   │-- ctr_model.pkl  # Click-through rate model
+│   │-- cvr_model.pkl  # Conversion rate model
+│   │-- bid_price_model.pkl  # Bidding price model
+│-- requirements.txt  # Required dependencies
 ```
 
-### 4.2. Running the Project
-
-1. **Prepare the dataset**: Place bid logs, impression logs, click logs, and conversion logs in the `data` directory.
-2. **Train CTR & CVR models**:
-   ```python
-   from xgboost import XGBClassifier
-   model = XGBClassifier()
-   model.fit(X_train, y_train)
-   model.save_model("ctr_model.json")  # Save trained model
-   ```
-3. **Execute the bidding system**:
-   ```bash
-   python main.py
-   ```
-   This loads the dataset, processes bids, and outputs the bidding decisions.
-
-### 4.3. Sample Output
-
-```text
-Bid placed: 7.85 for Advertiser 1458
-Bid placed: 12.34 for Advertiser 3358
-No bid placed for Advertiser 3386 (budget exceeded)
+## Installation and Setup
+### 1. Clone the Repository
+```sh
+git clone <repository_url>
+cd project_directory/python
 ```
 
+### 2. Set Up a Virtual Environment (Optional but Recommended)
+```sh
+python -m venv venv
+source venv/bin/activate  # On macOS/Linux
+venv\Scripts\activate  # On Windows
+```
+
+### 3. Install Dependencies
+Ensure you have Python 3.8+ installed. Then, install the required Python packages:
+```sh
+pip install -r requirements.txt
+```
+
+### 4. Ensure Models are Available
+Place the model files (`ctr_model.pkl`, `cvr_model.pkl`, `bid_price_model.pkl`) inside the `models/` directory. If they are missing, ensure you have them before running the application.
+
+### 5. Run the Streamlit App
+Execute the following command from within the `python/` directory:
+```sh
+streamlit run app.py
+```
+
+### 6. Access the App
+Once the server starts, Streamlit will display a local URL. Open it in your browser:
+```
+http://localhost:8501/
+```
+
+## Notes
+- Make sure all dependencies in `requirements.txt` are installed.
+- If using different model paths, update the `joblib.load()` paths in `app.py` accordingly.
+- If encountering errors, verify that the model files exist and match the required format.
+
+## Troubleshooting
+### Error: Module Not Found
+If you get a `ModuleNotFoundError`, install missing dependencies:
+```sh
+pip install -r requirements.txt
+```
+
+### Error: Model Not Found
+Ensure the `.pkl` files are correctly placed in the `models/` directory.
+
+### Error: Streamlit Port in Use
+If Streamlit fails to start due to the port being in use, try running:
+```sh
+streamlit run app.py --server.port 8502
+```
 
 
 ## **3.2 Our NON ML Approach**
@@ -177,22 +209,7 @@ We evaluate the performance of our bidding strategy using the following metrics:
 
 ---
 
-## **4. Implementation Details**
-
-### **4.1. Code Structure**
-- **`BidRequest.py`**: Defines the `BidRequest` class, which represents a bidding request.
-- **`Bidder.py`**: Defines the `Bidder` interface, which the `Bid` class implements.
-- **`Bid.py`**: Implements the `Bid` class, which contains the core bidding logic.
-- **`main.py`**: The entry point for the application. It loads the data, initializes the `Bid` class, and simulates the bidding process.
-
-### **4.2. Key Methods**
-- **`getHistoricalCTR`**: Estimates the CTR for a given bid request based on historical data.
-- **`getHistoricalCVR`**: Estimates the CVR for a given bid request based on historical data.
-- **`getBidPrice`**: Determines the bid price for a given bid request or returns `-1` if no bid is placed.
-
----
-
-## **5. Validation and Results**
+## **. Validation and Results**
 We validated our bidding strategy using the provided dataset. The results are as follows:
 
 | Advertiser ID | Score  | Budget Spent |

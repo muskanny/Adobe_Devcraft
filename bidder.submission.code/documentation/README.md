@@ -1,82 +1,73 @@
-## Team Name: ctrl+r
-## Team Members: Muskan Singh, Srishti Chugh, Nishtha Gupta, Shreeya Aggarwal
+# Ad Prediction App
 
+## Overview
+This Streamlit application predicts the number of impressions, clicks, conversions, and bidding prices for online advertising campaigns using pre-trained machine learning models.
 
-bidder.submission.code/
-├── python/
-│   ├── BidRequest.py
-│   ├── Bidder.py
-│   ├── Bid.py
-│   └── main.py
-├── documentation/
-│   ├── EDA.ipynb
-│   ├── Approach.md
-│   └── Validation_Results.md
-├── README.md
-└── requirements.txt
+## Directory Structure
+```
+project_directory/
+│-- python/
+│   │-- app.py  # Main Streamlit app
+│-- models/
+│   │-- ctr_model.pkl  # Click-through rate model
+│   │-- cvr_model.pkl  # Conversion rate model
+│   │-- bid_price_model.pkl  # Bidding price model
+│-- requirements.txt  # Required dependencies
+```
 
+## Installation and Setup
+### 1. Clone the Repository
+```sh
+git clone <repository_url>
+cd project_directory/python
+```
 
-# DSP Bidding Optimization
+### 2. Set Up a Virtual Environment (Optional but Recommended)
+```sh
+python -m venv venv
+source venv/bin/activate  # On macOS/Linux
+venv\Scripts\activate  # On Windows
+```
 
-
-
----
-
-## **Instructions to Run the Code**
-
-### **1. Prerequisites**
-- **Python Version**: Ensure you have Python 3.9 installed.
-- **Dependencies**: Install the required Python libraries listed in `requirements.txt`.
-
-### **2. Installation**
-1. Clone or download the project repository.
-2. Navigate to the project directory:
-   ```bash
-   cd bidder.submission.code
-Install the required dependencies:
-
-bash
-Copy
+### 3. Install Dependencies
+Ensure you have Python 3.8+ installed. Then, install the required Python packages:
+```sh
 pip install -r requirements.txt
-3. Running the Code
-Place your dataset files in the appropriate directory (e.g., /content/drive/MyDrive).
+```
 
-Ensure the dataset files are named correctly:
+### 4. Ensure Models are Available
+Place the model files (`ctr_model.pkl`, `cvr_model.pkl`, `bid_price_model.pkl`) inside the `models/` directory. If they are missing, ensure you have them before running the application.
 
-Bid files: bid.06.txt, bid.07.txt, etc.
+### 5. Run the Streamlit App
+Execute the following command from within the `python/` directory:
+```sh
+streamlit run app.py
+```
 
-Impression files: imp.06.txt, imp.07.txt, etc.
+### 6. Access the App
+Once the server starts, Streamlit will display a local URL. Open it in your browser:
+```
+http://localhost:8501/
+```
 
-Click files: clk.06.txt, clk.07.txt, etc.
+## Notes
+- Make sure all dependencies in `requirements.txt` are installed.
+- If using different model paths, update the `joblib.load()` paths in `app.py` accordingly.
+- If encountering errors, verify that the model files exist and match the required format.
 
-Conversion files: conv.06.txt, conv.07.txt, etc.
+## Troubleshooting
+### Error: Module Not Found
+If you get a `ModuleNotFoundError`, install missing dependencies:
+```sh
+pip install -r requirements.txt
+```
 
-Run the bidding simulation:
+### Error: Model Not Found
+Ensure the `.pkl` files are correctly placed in the `models/` directory.
 
-bash
-Copy
-python python/main.py
-4. Expected Output
-The program will simulate the bidding process and output the results in the console. For example:
-
-Copy
-Bid placed: 10.0 for Advertiser 1458
-Bid placed: 10.02 for Advertiser 3358
-5. Viewing Documentation
-EDA: Open the documentation/EDA.ipynb file in Jupyter Notebook to view the exploratory data analysis.
-
-Approach: Open the documentation/Approach.md file to read about the bidding strategy and approach.
-
-Validation Results: Open the documentation/Validation_Results.md file to view the validation results and insights.
-
-Dependencies
-Python 3.9
-
-pandas
-
-numpy
-
-matplotlib
-
-seaborn
+### Error: Streamlit Port in Use
+If Streamlit fails to start due to the port being in use, try running:
+```sh
+streamlit run app.py --server.port 8502
+```
 

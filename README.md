@@ -10,7 +10,7 @@ This document describes the approach used in our DSP (Demand-Side Platform) bidd
 
 # Ad Bidding System with ML-Based Optimization
 
-## 1. Problem Statement
+##  Problem Statement
 
 In the digital advertising ecosystem, advertisers compete for ad placements through a real-time bidding (RTB) system. The challenge lies in efficiently allocating a fixed budget across multiple bidding opportunities to maximize the return on investment (ROI). The effectiveness of bidding is determined by two key probabilities:
 
@@ -26,7 +26,7 @@ This project implements a **machine learning-based RTB system** that utilizes hi
 
 ---
 
-## 2. Solution Overview
+##  Solution Overview
 
 The system is implemented using **XGBoost classifiers** for CTR and CVR predictions. The bidding strategy involves:
 
@@ -44,62 +44,81 @@ A **non-ML approach** is also provided, using historical CTR and CVR values inst
 
 ---
 
-## 3. Implementation Details
 
-### 3.1. Code Structure
+# Ad Prediction App-- HOW TO RUN THE APP
 
-- `Bid.py`: Implements the **Bid** class, handling bid computation using ML models.
-- `Bidder.py`: Defines the base class for bid computation.
-- `BidRequest.py`: Represents a bid request containing details about the ad slot and advertiser.
-- `main.py`: Loads and processes historical data, simulates bidding, and evaluates performance.
+## Overview
+This Streamlit application predicts the number of impressions, clicks, conversions, and bidding prices for online advertising campaigns using pre-trained machine learning models.
 
-### 3.2. Log Loss Calculation for CTR & CVR
-
-To evaluate model robustness, **log loss** is used for CTR and CVR predictions:
-
-\[ Log Loss = - \frac{1}{N} \sum \left[ y \log(p) + (1 - y) \log(1 - p) \right] \]
-
-where:
-- \( y \) is the actual outcome (click/conversion: 0 or 1).
-- \( p \) is the predicted probability.
-
-This metric ensures the models produce well-calibrated probability scores, essential for effective bid optimization.
-
----
-
-## 4. How to Run the Project
-
-### 4.1. Prerequisites
-
-Ensure you have the following installed:
-- Python 3.x
-- Pandas
-- NumPy
-- XGBoost
-- Scikit-learn
-
-Install dependencies using:
-```bash
-pip install pandas numpy xgboost scikit-learn
+## Directory Structure
+```
+project_directory/
+│-- python/
+│   │-- app.py  # Main Streamlit app
+│-- models/
+│   │-- ctr_model.pkl  # Click-through rate model
+│   │-- cvr_model.pkl  # Conversion rate model
+│   │-- bid_price_model.pkl  # Bidding price model
+│-- requirements.txt  # Required dependencies
 ```
 
-### 4.2. Running the Project
+## Installation and Setup
+### 1. Clone the Repository
+```sh
+git clone <repository_url>
+cd project_directory/python
+```
 
-1. **Prepare the dataset**: Place bid logs, impression logs, click logs, and conversion logs in the `data` directory.
-2. **Train CTR & CVR models**:
-   ```python
-   from xgboost import XGBClassifier
-   model = XGBClassifier()
-   model.fit(X_train, y_train)
-   model.save_model("ctr_model.json")  # Save trained model
-   ```
-3. **Execute the bidding system**:
-   ```bash
-   python main.py
-   ```
-   This loads the dataset, processes bids, and outputs the bidding decisions.
+### 2. Set Up a Virtual Environment (Optional but Recommended)
+```sh
+python -m venv venv
+source venv/bin/activate  # On macOS/Linux
+venv\Scripts\activate  # On Windows
+```
 
-### 4.3. Sample Output
+### 3. Install Dependencies
+Ensure you have Python 3.8+ installed. Then, install the required Python packages:
+```sh
+pip install -r requirements.txt
+```
+
+### 4. Ensure Models are Available
+Place the model files (`ctr_model.pkl`, `cvr_model.pkl`, `bid_price_model.pkl`) inside the `models/` directory. If they are missing, ensure you have them before running the application.
+
+### 5. Run the Streamlit App
+Execute the following command from within the `python/` directory:
+```sh
+streamlit run app.py
+```
+
+### 6. Access the App
+Once the server starts, Streamlit will display a local URL. Open it in your browser:
+```
+http://localhost:8501/
+```
+
+## Notes
+- Make sure all dependencies in `requirements.txt` are installed.
+- If using different model paths, update the `joblib.load()` paths in `app.py` accordingly.
+- If encountering errors, verify that the model files exist and match the required format.
+
+## Troubleshooting
+### Error: Module Not Found
+If you get a `ModuleNotFoundError`, install missing dependencies:
+```sh
+pip install -r requirements.txt
+```
+
+### Error: Model Not Found
+Ensure the `.pkl` files are correctly placed in the `models/` directory.
+
+### Error: Streamlit Port in Use
+If Streamlit fails to start due to the port being in use, try running:
+```sh
+streamlit run app.py --server.port 8502
+```
+
+###  Sample Output
 
 ```text
 Bid placed: 7.85 for Advertiser 1458
